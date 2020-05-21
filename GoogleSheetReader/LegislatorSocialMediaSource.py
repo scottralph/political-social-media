@@ -35,13 +35,12 @@ class LegislatorSocialMediaSource:
         iter_sheet = iter(self.sheet_values)
         # Skip the header
         next(iter_sheet)
-        values = [{'state': x[0], 'name': x[1], 'twitter': twitter_name_from_handle(x[2])} for x in iter_sheet]
-        pass
-        return values
-
+        return [{'state': row[0], 'name': row[1], 'twitter': twitter_name_from_handle(row[2])} for row in iter_sheet]
 
 if __name__ == "__main__":
     handles = LegislatorSocialMediaSource(CREDENTIALS_FILE, SHEET_NAME)
     handles.authorize()
-    x = handles.get_legislators()
+    legislators = handles.get_legislators()
+    for legislator in legislators:
+        print(legislator)
     pass
