@@ -68,5 +68,5 @@ class TweetParser:
         tweet['URLs'] = urls
         tweet['hash_tags'] = TweetParser.get_hash_tags(text)
         sentences = TweetParser.break_into_sentences(urls_removed)
-        tokens = list(map(lambda x: TweetParser.remove_punctuation(x), sentences))
+        tokens = list(map(lambda x: TweetParser.remove_punctuation(x).lower(), sentences))
         tweet['tokens'] = tokens
