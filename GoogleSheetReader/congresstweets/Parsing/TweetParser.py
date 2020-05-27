@@ -1,8 +1,8 @@
 import re
 
-mentionRE = re.compile(r"@\w+\s")
-urlRE = re.compile(r"https?://\S+[\s$]")
-hashTagRE = re.compile(r"#(\w+)\s")
+mentionRE = re.compile(r"@\w+(?:\s+|$)")
+urlRE = re.compile(r"https?://\S+(?:\s+|$)")
+hashTagRE = re.compile(r"#(\w+)(?:\s+|$)")
 sentenceRE = re.compile(r"\w+[.!?\n$]")
 
 
@@ -67,4 +67,6 @@ class TweetParser:
         urls, urls_removed = TweetParser.extract_urls(mentions_removed)
         tweet['URLs'] = urls
         tweet['hash_tags'] = TweetParser.get_hash_tags(text)
-        tweet['tokens'] = TweetParser.break_into_sentences(urls_removed)
+        sentences = TweetParser.break_into_sentences(urls_removed)
+        tokens = list(map(lambda x: TweetParser.remove_punctuation(x), sentences))
+        tweet['tokens'] = tokens

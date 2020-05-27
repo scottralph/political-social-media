@@ -47,7 +47,21 @@ class TestTweetParser(TestCase):
         }
         parser = TweetParser()
         parser.tokenize_tweet(tweet)
-        pass
+        expectedTokens = ['I have been telling people for weeks',
+                    'Outside of Congress there is broad support for direct relief',
+                    'ABCAct',
+                    'They only follow polls that fit the desires of their corporate donors not the actual people who vote them into office',
+                    'Sad', 'QT 82% of the country supports monthly relief checks',
+                    'Eighty',
+                    'Two',
+                    'Percent',
+                    "We need to stop making excuses and get money into people's pockets every month",
+                    'I have a bill to do just that']
+        self.assertEquals(tweet['tokens'], expectedTokens)
+        self.assertEquals(tweet['mentions'], ["Ilhan"])
+        self.assertEquals(tweet['URLs'], ['https://twitter.com/Ilhan/status/1263218052868509697',
+                                          'https://omar.house.gov/media/press-releases/rep-omar-introduces-bold-package-address-coronavirus-crisis-1000-every-adult',
+                                          'https://twitter.com/zackafriedman/status/1262835440853364736'])
 
 
 
