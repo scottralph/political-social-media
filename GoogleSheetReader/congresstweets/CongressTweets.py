@@ -1,6 +1,9 @@
 import os
 import json
 from tqdm import tqdm
+
+from congresstweets.Parsing.TweetParser import TweetParser
+
 BASEPATH = '/home/scott/Documents/git/congresstweets/data'
 
 
@@ -71,20 +74,37 @@ class CongressTweets:
                 group[screen_name] = list(tweet)
         return group
 
+    def compute_hash_tag_frequencies(self):
+        parser = TweetParser()
+        hash_tag_dict = dict()
+        for i in tqdm(range(len(self.tweets))):
+            tweet = self.tweets[i]['text']
+            hash_tags = parser.get_hash_tags(tweet)
+            for hash_tag in hash_tags:
+                old_count = 0
+                if hash_tag in hash_tag_dict:
+                    old_count = hash_tag_dict[hash_tag]
+                hash_tag_dict[hash_tag] = old_count + 1
+        hash_tag_freq = [{'word': key, 'count': value} for key, value in hash_tag_dict.items()]
+        return hash_tag_freq
 
 
 
 if __name__ == "__main__":
     src = CongressTweets(BASEPATH)
     src.load_all()
+    #src.load('2020-05-20.json')
 
     print(f'Found {len(src.get_tweets())} raw tweets.')
     src.sanitize_data()
     print(f'Sanitized count is {len(src.get_tweets())} tweets.')
-
-
     src.get_stats()
     distinct = src.get_distinct_names()
     grouped = src.group_tweets_by_screen_name()
-    pass
+    print("Finding distinct hash-tags")
+    hash_tag_frequencies  = src.compute_hash_tag_frequencies()
+    print(f"Found {len(hash_tag_frequencies)} distinct hash-tags")
 
+    hash_tag_frequencies.sort(key=lambda x: x['count'], reverse=True)
+
+    pass
